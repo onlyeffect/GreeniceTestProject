@@ -7,7 +7,7 @@ class DistanceManager
     // Средний радиус земного шара в километрах
     const EARTH_RADIUS = 6371;
 
-    public function getDistanceToAll($initialPlace, array $placesToMeasure)
+    public function getDistanceToAll($initialPlace, $placesToMeasure)
     {
         $result = [];
 
@@ -15,7 +15,7 @@ class DistanceManager
             $result[$placeToMeasure['address']] = $this->measureDistanceBetweenTwo($initialPlace, $placeToMeasure);
         }
 
-        return $result = $this->getOnlyWithDistance($result);
+        return collect($result);
     }
 
     public function measureDistanceBetweenTwo($placeOne, $placeTwo): int
@@ -24,14 +24,5 @@ class DistanceManager
 
         // Дистанция в километрах
         return round($distance = $d * self::EARTH_RADIUS);
-    }
-
-    public function getOnlyWithDistance(array $array)
-    {
-        $filteredArray = collect($array)->filter(function ($value, $key) {
-            return $value !== 0;
-        });
-
-        return $filteredArray;
     }
 }

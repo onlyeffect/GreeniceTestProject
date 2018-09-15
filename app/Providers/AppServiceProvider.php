@@ -23,8 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Interfaces\PlaceRepositoryInterface', function(){
-            return $this->app->make('App\Repositories\DbPlaceRepository');
-        });
+        //
     }
 }

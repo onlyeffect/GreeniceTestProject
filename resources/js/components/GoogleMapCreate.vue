@@ -66,7 +66,7 @@ export default {
         this.place.address_components.forEach(function(item){
           address += item.long_name + ' ';
         });
-        if(address !== null){
+        if(address !== null && address !== ''){
           axios({
             method: 'post',
             url: '/places', 

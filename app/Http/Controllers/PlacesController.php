@@ -3,31 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\DistanceManager;
-use App\Interfaces\PlaceRepositoryInterface;
+use App\Place;
 use Illuminate\Http\Request;
 
 class PlacesController extends Controller
 {
-    /**
-     * @var PlaceRepositoryInterface
-     */
-    protected $places;
-
-    /**
-     * @var DistanceManager
-     */
-    protected $distanceManager;
-
-    /**
-     * PlacesController constructor.
-     * @param UserRepository $repository
-     */
-    public function __construct(PlaceRepositoryInterface $places, DistanceManager $distanceManager)
-    {
-        $this->places = $places;
-        $this->distanceManager = $distanceManager;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +15,7 @@ class PlacesController extends Controller
      */
     public function index()
     {
-        $places = $this->places->all()->sortBy('address');
+        $places = Place::all()->sortBy('address');
 
         return view('places.index', compact('places'));
     }
@@ -64,7 +44,7 @@ class PlacesController extends Controller
             'lat' => 'required',
         ]);
 
-        $newPlace = $this->places->create([
+        $newPlace = Place::create([
             'address' => $request['address'],
             'lat' => $request['lat'],
             'lng' => $request['lng'],
@@ -79,10 +59,8 @@ class PlacesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Place $place)
     {
-        $place = $this->places->find($id);
-
         return view('places.update', compact('place'));
     }
 
@@ -93,7 +71,7 @@ class PlacesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Place $place, Request $request)
     {
         $this->validate($request, [
             'address' => 'required',
@@ -101,13 +79,13 @@ class PlacesController extends Controller
             'lat' => 'required',
         ]);
 
-        $newPlace = $this->places->update($id, [
+        $place->update([
             'address' => $request['address'],
             'lat' => $request['lat'],
             'lng' => $request['lng'],
         ]);
 
-        return $newPlace->address;
+        return $place->fresh();
     }
 
     /**
@@ -116,21 +94,19 @@ class PlacesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Place $place)
     {
-        if ($this->places->delete($id)) {
+        if ($place->delete()) {
             return redirect('/')->with('success', 'Place Deleted');
         } else {
             return redirect('/')->with('error', 'Something went wrong');
         }
     }
 
-    public function getDistances($id)
+    public function getDistances(Place $place, DistanceManager $distanceManager)
     {
-        $selectedPlace = $this->places->find($id);
+        $otherPlaces = Place::getAllExcept($place);
 
-        $allPlaces = $this->places->all()->toArray();
-
-        return $this->distanceManager->getDistanceToAll($selectedPlace, $allPlaces)->sort();
+        return $distanceManager->getDistanceToAll($place, $otherPlaces)->sort();
     }
 }
