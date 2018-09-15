@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Interfaces\PlaceRepositoryInterface;
 use App\DistanceManager;
+use App\Interfaces\PlaceRepositoryInterface;
+use Illuminate\Http\Request;
 
 class PlacesController extends Controller
 {
@@ -17,7 +17,6 @@ class PlacesController extends Controller
      * @var DistanceManager
      */
     protected $distanceManager;
-
 
     /**
      * PlacesController constructor.
@@ -62,13 +61,13 @@ class PlacesController extends Controller
         $this->validate($request, [
             'address' => 'required',
             'lat' => 'required',
-            'lat' => 'required'
+            'lat' => 'required',
         ]);
 
         $newPlace = $this->places->create([
             'address' => $request['address'],
             'lat' => $request['lat'],
-            'lng' => $request['lng']
+            'lng' => $request['lng'],
         ]);
 
         return $newPlace->address;
@@ -99,13 +98,13 @@ class PlacesController extends Controller
         $this->validate($request, [
             'address' => 'required',
             'lat' => 'required',
-            'lat' => 'required'
+            'lat' => 'required',
         ]);
 
         $newPlace = $this->places->update($id, [
             'address' => $request['address'],
             'lat' => $request['lat'],
-            'lng' => $request['lng']
+            'lng' => $request['lng'],
         ]);
 
         return $newPlace->address;
@@ -119,7 +118,7 @@ class PlacesController extends Controller
      */
     public function destroy($id)
     {
-        if($this->places->delete($id)){
+        if ($this->places->delete($id)) {
             return redirect('/')->with('success', 'Place Deleted');
         } else {
             return redirect('/')->with('error', 'Something went wrong');

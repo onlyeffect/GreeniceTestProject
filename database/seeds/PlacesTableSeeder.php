@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Place;
 
 class PlacesTableSeeder extends Seeder
 {
@@ -14,7 +13,7 @@ class PlacesTableSeeder extends Seeder
     {
         $places = include_once 'areas.php';
 
-        foreach($places as $key => $value){
+        foreach ($places as $key => $value) {
             DB::table('places')->insert([
                 'address' => $key,
                 'lat' => $value['lat'],

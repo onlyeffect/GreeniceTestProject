@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePlacesTable extends Migration
 {
@@ -17,7 +17,7 @@ class CreatePlacesTable extends Migration
             $table->increments('id');
             $table->string('address')->unique();
             $table->float('lat', 9, 6);
-            $table->float('lng', 9 , 6);
+            $table->float('lng', 9, 6);
         });
     }
 
