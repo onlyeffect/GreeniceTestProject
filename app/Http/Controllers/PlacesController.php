@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\DistanceManager;
+use App\Http\Requests\StorePlace;
+use App\Http\Requests\UpdatePlace;
 use App\Place;
-use Illuminate\Http\Request;
 
 class PlacesController extends Controller
 {
@@ -36,18 +37,14 @@ class PlacesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePlace $request)
     {
-        $this->validate($request, [
-            'address' => 'required',
-            'lat' => 'required',
-            'lat' => 'required',
-        ]);
+        $validated = $request->validated();
 
         $newPlace = Place::create([
-            'address' => $request['address'],
-            'lat' => $request['lat'],
-            'lng' => $request['lng'],
+            'address' => $validated['address'],
+            'lat' => $validated['lat'],
+            'lng' => $validated['lng'],
         ]);
 
         return $newPlace->address;
@@ -71,18 +68,14 @@ class PlacesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Place $place, Request $request)
+    public function update(Place $place, UpdatePlace $request)
     {
-        $this->validate($request, [
-            'address' => 'required',
-            'lat' => 'required',
-            'lat' => 'required',
-        ]);
+        $validated = $request->validated();
 
         $place->update([
-            'address' => $request['address'],
-            'lat' => $request['lat'],
-            'lng' => $request['lng'],
+            'address' => $validated['address'],
+            'lat' => $validated['lat'],
+            'lng' => $validated['lng'],
         ]);
 
         return $place->fresh();
